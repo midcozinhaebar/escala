@@ -202,6 +202,12 @@
       html += '<div class="vazio-box"><b>Ninguém escalado</b>Nenhum turno lançado para este dia.</div>';
       return html;
     }
+    var escalados = lista.map(function(t){ return t.nome; });
+    var folga = D.equipe.filter(function(p){ return p.ativo && escalados.indexOf(p.nome) < 0 && (filtro === 'Todos' || p.setor === filtro); });
+    if (folga.length){
+      html += '<div class="grupo" style="margin-top:4px">De folga (' + folga.length + ')</div><div class="folgas" style="margin-bottom:14px">'
+        + folga.map(function(p){ return '<span>'+esc(p.nome)+'</span>'; }).join('') + '</div>';
+    }
     if (setores.length > 1){
       html += '<div class="filtros">' + ['Todos'].concat(setores).map(function(s){
         var n = s === 'Todos' ? lista.length : lista.filter(function(t){ return pessoa(t.nome).setor === s; }).length;
@@ -210,12 +216,6 @@
     }
     html += visiveis.map(function(t){ return card(t); }).join('');
 
-    var escalados = lista.map(function(t){ return t.nome; });
-    var folga = D.equipe.filter(function(p){ return p.ativo && escalados.indexOf(p.nome) < 0 && (filtro === 'Todos' || p.setor === filtro); });
-    if (folga.length){
-      html += '<div class="grupo">De folga</div><div class="folgas">'
-        + folga.map(function(p){ return '<span>'+esc(p.nome)+'</span>'; }).join('') + '</div>';
-    }
     return html;
   }
 
